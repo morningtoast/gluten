@@ -1,3 +1,8 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
 		var rwdbind = (function() {
 			var settings = {
 				debug: true,
@@ -184,7 +189,6 @@
 				getSizeId: function(pixels) {
 					for (a=0; a < settings.breaks.length; a+=1) {
 						var thisSize = settings.breaks[a];
-						var nextSize = settings.breaks[a+1];
 
 						settings.currentId = thisSize.id;
 
@@ -211,6 +215,58 @@
 		        init: init,
 		        rules: bind.extend,
 		        refresh: bind.refresh,
-		        size: settings.currentId
+		        size: settings.currentId,
+		        width: settings.currentSize
 		    };
 		}());
+
+		rwdbind.init({small:400,bradlet:600});
+		rwdbind.rules([
+			{
+				selector: "#smallmedium",
+				event:    "click.smallmedium",
+				sizes:    "small,medium",
+				callback: function() {
+					alert("Small and medium only");
+				}
+
+			},
+			{
+				selector: "#bradlet",
+				event:    "click.fatfingers",
+				sizes:    "bradlet",
+				callback: function() {
+					alert("Bradlet only");
+				}
+
+			},
+			{
+				selector: "#all",
+				event:    "click.always",
+				callback: function() {
+					alert("Any size");
+				}
+
+			}
+
+		]);
+		
+	</script>
+	<style>
+		button { background-color:#f00; color:#fff;}
+
+		#all, .screen-small #smallmedium, .screen-medium #smallmedium, .screen-bradlet #bradlet {
+			background-color:#090;
+		}
+	</style>
+</head>
+<body>
+	<button id="smallmedium">Small or medium</button>
+	<button id="bradlet">Bradlet only</button>
+	<button id="all">Always active</button>
+
+	<script>
+		rwdbind.refresh();
+	</script>
+</body>
+</html>
