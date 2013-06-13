@@ -4,8 +4,8 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="gluten.js"></script>
 	<script>
-		rwdbind.init({small:400,bradlet:600});
-		rwdbind.rules([
+		gluten.init({small:400,bradlet:600});
+		gluten.rules([
 			{
 				selector: "#smallmedium",
 				event:    "click.smallmedium",
@@ -36,7 +36,7 @@
 		]);
 		
 		$(document).ready(function() { 
-			rwdbind.refresh();
+			gluten.refresh();
 		});
 
 		
