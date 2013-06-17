@@ -16,7 +16,7 @@
 			};
 
 			var debug = function(s) {
-				if (settings.debug) { console.log(s); }
+				if (settings.debug) { console.log("[Gluten] "+s); }
 			}
 
 
