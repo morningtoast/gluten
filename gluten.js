@@ -1,4 +1,4 @@
-		var gluten = (function() {
+		var Gluten = (function() {
 			var settings = {
 				debug: true,
 				breaks: {
@@ -43,7 +43,7 @@
 
 
 					if (settings.currentId != lastId) {
-						debug("\n! Window resized to "+settings.currentId+ " ("+width+")");
+						debug("! Window resized to "+settings.currentId+ " ("+width+")");
 
 						if (settings.classPrefix) {
 							$("html").removeClass(settings.classPrefix+lastId).addClass(settings.classPrefix+settings.currentId);
