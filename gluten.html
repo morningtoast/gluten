@@ -4,8 +4,8 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="gluten.js"></script>
 	<script>
-		gluten.init({small:400,bradlet:600});
-		gluten.rules([
+		Gluten.init({small:400,tablet:600});
+		Gluten.rules([
 			{
 				selector: "#smallmedium",
 				event:    "click.smallmedium",
@@ -16,11 +16,11 @@
 
 			},
 			{
-				selector: "#bradlet",
+				selector: "#tablet",
 				event:    "click.fatfingers",
 				sizes:    "bradlet",
 				callback: function() {
-					alert("Bradlet only");
+					alert("Tablet only");
 				}
 
 			},
@@ -36,7 +36,7 @@
 		]);
 		
 		$(document).ready(function() { 
-			gluten.refresh();
+			Gluten.refresh();
 		});
 
 		
@@ -51,7 +51,7 @@
 </head>
 <body>
 	<button id="smallmedium">Small or medium</button>
-	<button id="bradlet">Bradlet only</button>
+	<button id="tablet">Tablet only</button>
 	<button id="all">Always active</button>
 </body>
 </html>
