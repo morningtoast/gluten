@@ -13,8 +13,29 @@
 
     Gluten.VERSION = '0.0.1';
 
-    // Allow Gluten to access jQuery
-    Gluten.$ = window.jquery || window.$;
+    // Alias Array Prototypes
+    var push   = Array.prototype.push,
+        slice  = Array.prototype.slice,
+        concat = Array.prototype.concat,
+        map    = Array.prototype.map;
+
+
+    var each = function(obj, iterator, context) {
+        if (obj == null) return;
+        if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
+          obj.forEach(iterator, context);
+        } else if (obj.length === +obj.length) {
+          for (var i = 0, l = obj.length; i < l; i++) {
+            if (iterator.call(context, obj[i], i, obj) === breaker) return;
+          }
+        } else {
+          for (var key in obj) {
+            if (_.has(obj, key)) {
+              if (iterator.call(context, obj[key], key, obj) === breaker) return;
+            }
+          }
+        }
+    };
 
     // Initialize the settings object
     var settings = Gluten.settings = {
@@ -24,20 +45,21 @@
             medium : 760,
             large  : 1200
         },
-        rules: [],
-        detach: [],
-        global: [],
         resizeTimer: 100,
-        classPrefix: "screen-",
-        currentSize: 0,
-        currentId: "small"
+        classPrefix: "screen-"
+    };
+
+    var caches = {
+         rules  : [],
+         detach : [],
+         global : []
     };
 
     var debug = function(s) {
         if (settings.debug) { console.log(s); }
     };
 
-    var config = Gluten.config = function(breaks, cb) {
+    var start = Gluten.start = function(breaks, cb) {
 
         /* Config Method 
          * @param object breaks
@@ -47,33 +69,36 @@
          * Method will take provided breakpoints and add it to the settings object
          * Method will also initialize the resize listener
          * */
-        
+
         var settings = this.settings;
 
+        this.currentSize = 0;
+        this.currentId = "small";
+
         // extend the current breaks with @param breaks
-        if(breaks) { $.extend(settings.breaks, breaks); }
+        if(breaks) { helpers.extend(settings.breaks, breaks); }
 
         settings.breaks = helpers.sort(settings.breaks);
-        settings.currentSize = window.innerWidth;
-        settings.currentId = helpers.getSizeId(settings.currentSize);
+        Gluten.currentSize = window.innerWidth;
+        Gluten.currentId = helpers.getSizeId(Gluten.currentSize);
 
-        $("html").addClass(settings.classPrefix+settings.currentId);
+        $("html").addClass(settings.classPrefix+Gluten.currentId);
 
         debug("> Init");
-        debug(". Landing size is "+settings.currentId+" ("+settings.currentSize+")");
+        debug(". Landing size is "+Gluten.currentId+" ("+Gluten.currentSize+")");
 
         // initialize the resize listener
         windowResize.init(function(width) {
-            var lastId = settings.currentId;
-            settings.currentSize = width;
+            var lastId = Gluten.currentId;
+            Gluten.currentSize = width;
 
             helpers.getSizeId(width);
 
-            if (settings.currentId !== lastId) {
-                debug("\n! Window resized to "+settings.currentId+ " ("+width+")");
+            if (Gluten.currentId !== lastId) {
+                debug("\n! Window resized to "+Gluten.currentId+ " ("+width+")");
 
                 if (settings.classPrefix) {
-                    $("html").removeClass(settings.classPrefix+lastId).addClass(settings.classPrefix+settings.currentId);
+                    $("html").removeClass(settings.classPrefix+lastId).addClass(settings.classPrefix+Gluten.currentId);
                 }
 
                 binds.refresh();
@@ -94,9 +119,8 @@
     // Binding methods
     var binds = Gluten.binds = {
         
-        extend: function (rules) {
-            var settings = this.settings;
-            this.settings.rules = $.extend(settings.rules, rules);
+        extend: function (bindRules) {
+            caches.rules = helpers.extend(caches.rules, bindRules);
 
             return this;
         },
@@ -115,31 +139,31 @@
         attach: function () {
             var settings = Gluten.settings;
 
-            $.each(settings.rules, function(k, ruleObj) {
+            caches.rules.forEach(function(ruleObj) {  
                 var allSizes = false;
 
                 if (typeof ruleObj.sizes == "undefined") {
                     allSizes = true;
                 }
 
-                if (allSizes || (ruleObj.sizes.indexOf(settings.currentId) >= 0)) {
+                if (allSizes || (ruleObj.sizes.indexOf(Gluten.currentId) >= 0)) {
                     if (typeof ruleObj.selector !== "undefined") {
 
                         // A bind
                         
-                        if (settings.global.indexOf(ruleObj.event) < 0) {
+                        if (caches.global.indexOf(ruleObj.event) < 0) {
                             debug("+ attaching "+ruleObj.event+" ("+allSizes+")");
                             $(ruleObj.selector).on(ruleObj.event, ruleObj.live, ruleObj.callback);
                         }
 
                         if (!allSizes) { 
-                            settings.detach.push({
+                           caches.detach.push({
                                     "selector":ruleObj.selector,
                                     "event":ruleObj.event
                             });
 
                         } else {
-                            settings.global.push(ruleObj.event);
+                            caches.global.push(ruleObj.event);
                         }
                     } else {
                         // Just a function
@@ -152,12 +176,12 @@
         },
         
         detach: function () {
-            $.each(settings.detach, function(k, data) {
+            caches.detach.forEach(function(data) {
                 debug("- detaching "+data.event);
                 $(data.selector).off(data.action);
             });
 
-            settings.detach = [];
+            caches.detach = [];
             
             return this;
         }
@@ -243,7 +267,7 @@
                 var thisSize = settings.breaks[a],
                     nextSize = settings.breaks[a+1];
 
-                settings.currentId = thisSize.id;
+                Gluten.currentId = thisSize.id;
 
                 if(pixels < thisSize.max) {
                     break;
@@ -256,7 +280,19 @@
         hashHandler: function(el, event) {
             var ev = $._data(el, 'events');
             return (ev && ev[event]) ? true : false;
+        },
+
+        extend: function(obj) {
+            each(slice.call(arguments, 1), function(source) {
+                if(source) {
+                    for(var prop in source) {
+                        obj[prop] = source[prop];
+                    }
+                }
+            });
+            return obj;
         }
+
     };
 
     Gluten.rules = binds.extend;
