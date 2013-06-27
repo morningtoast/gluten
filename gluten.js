@@ -14,28 +14,8 @@
     Gluten.VERSION = '0.0.1';
 
     // Alias Array Prototypes
-    var push   = Array.prototype.push,
-        slice  = Array.prototype.slice,
-        concat = Array.prototype.concat,
-        map    = Array.prototype.map;
-
-
-    var each = function(obj, iterator, context) {
-        if (obj == null) return;
-        if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
-          obj.forEach(iterator, context);
-        } else if (obj.length === +obj.length) {
-          for (var i = 0, l = obj.length; i < l; i++) {
-            if (iterator.call(context, obj[i], i, obj) === breaker) return;
-          }
-        } else {
-          for (var key in obj) {
-            if (_.has(obj, key)) {
-              if (iterator.call(context, obj[key], key, obj) === breaker) return;
-            }
-          }
-        }
-    };
+    var slice  = Array.prototype.slice,
+        each   = Array.prototype.forEach;
 
     // Initialize the settings object
     var settings = Gluten.settings = {
@@ -59,7 +39,7 @@
         if (settings.debug) { console.log(s); }
     };
 
-    var start = Gluten.start = function(breaks, cb) {
+    var init = Gluten.init = function(breaks, cb) {
 
         /* Config Method 
          * @param object breaks
@@ -283,7 +263,7 @@
         },
 
         extend: function(obj) {
-            each(slice.call(arguments, 1), function(source) {
+            each.call(slice.call(arguments, 1), function(source) {
                 if(source) {
                     for(var prop in source) {
                         obj[prop] = source[prop];
