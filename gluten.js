@@ -11,7 +11,7 @@
         Gluten = root.Gluten = {};
     }
 
-    Gluten.VERSION = '0.0.1';
+    Gluten.VERSION = '1.2';
 
     // Alias Array Prototypes
     var slice  = Array.prototype.slice,
@@ -50,35 +50,35 @@
          * Method will also initialize the resize listener
          * */
 
-        var settings = this.settings;
+        var settings = Gluten.settings;
 
-        this.currentSize = 0;
-        this.currentId = "small";
+        Gluten.width = 0;
+        Gluten.size  = "small";
 
         // extend the current breaks with @param breaks
         if(breaks) { helpers.extend(settings.breaks, breaks); }
 
         settings.breaks = helpers.sort(settings.breaks);
-        Gluten.currentSize = window.innerWidth;
-        Gluten.currentId = helpers.getSizeId(Gluten.currentSize);
+        Gluten.width    = window.innerWidth;
+        Gluten.size     = helpers.getSizeId(Gluten.width);
 
-        $("html").addClass(settings.classPrefix+Gluten.currentId);
+        $("html").addClass(settings.classPrefix+Gluten.size);
 
         debug("> Init");
-        debug(". Landing size is "+Gluten.currentId+" ("+Gluten.currentSize+")");
+        debug(". Landing size is "+Gluten.size+" ("+Gluten.width+")");
 
         // initialize the resize listener
         windowResize.init(function(width) {
-            var lastId = Gluten.currentId;
-            Gluten.currentSize = width;
+            var lastId   = Gluten.size;
+            Gluten.width = width;
 
             helpers.getSizeId(width);
 
-            if (Gluten.currentId !== lastId) {
-                debug("\n! Window resized to "+Gluten.currentId+ " ("+width+")");
+            if (Gluten.size !== lastId) {
+                debug("\n! Window resized to "+Gluten.size+ " ("+width+")");
 
                 if (settings.classPrefix) {
-                    $("html").removeClass(settings.classPrefix+lastId).addClass(settings.classPrefix+Gluten.currentId);
+                    $("html").removeClass(settings.classPrefix+lastId).addClass(settings.classPrefix+Gluten.size);
                 }
 
                 binds.refresh();
@@ -126,7 +126,7 @@
                     allSizes = true;
                 }
 
-                if (allSizes || (ruleObj.sizes.indexOf(Gluten.currentId) >= 0)) {
+                if (allSizes || (ruleObj.sizes.indexOf(Gluten.size) >= 0)) {
                     if (typeof ruleObj.selector !== "undefined") {
 
                         // A bind
@@ -247,7 +247,7 @@
                 var thisSize = settings.breaks[a],
                     nextSize = settings.breaks[a+1];
 
-                Gluten.currentId = thisSize.id;
+                Gluten.size = thisSize.id;
 
                 if(pixels < thisSize.max) {
                     break;
@@ -275,7 +275,7 @@
 
     };
 
-    Gluten.rules = binds.extend;
+    Gluten.rules   = binds.extend;
     Gluten.refresh = binds.refresh;
 
 
