@@ -4,7 +4,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script type="text/javascript" src="../gluten.js"></script>
 	<script>
-		Gluten.init({small:400,bradlet:600});
+		Gluten.init({small:400,tablet:600});
 
 		Gluten.rules([
 			{
@@ -18,8 +18,8 @@
 			},
 			{
 				selector: "#tablet",
-				event:    "click.fatfingers",
-				sizes:    "bradlet",
+				event:    "click.tablet",
+				sizes:    "tablet",
 				callback: function() {
 					alert("Tablet only");
 				}
@@ -45,7 +45,7 @@
 	<style>
 		button { background-color:#f00; color:#fff;}
 
-		#all, .screen-small #smallmedium, .screen-medium #smallmedium, .screen-bradlet #bradlet {
+		#all, .screen-small #smallmedium, .screen-medium #smallmedium, .screen-tablet #tablet {
 			background-color:#090;
 		}
 	</style>
