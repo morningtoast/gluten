@@ -1,26 +1,17 @@
 Gluten.js
 ======
 
-Use Gluten to define bindings within responsive markup.
-
-Lets you easily define and switch between bindings on the same element within
-different break points. 
-
+Use Gluten lets you easily define and switch between bindings on the same element within different break points. On resize, Gluten will detach and attach events based on your preferred breakpoints.
 
 ## Todo
-
 * Remove jQuery dependcies
 * More/better docs
-=======
-# Description
 
-Gluten.js is a responsive event binding library. On resize, Gluten will detach
-and attach events based on your preferred breakpoints.
 
-# Dependencies
+## Dependencies
 As of this moment, Gluten requires jQuery for event bindings.
 
-# Usage
+## Usage
 To initalize the library, pass your breakpoints to `Gluten.init()` like
 the following:
 
