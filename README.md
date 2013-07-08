@@ -3,6 +3,10 @@ Gluten.js
 
 Use Gluten lets you easily define and switch between bindings on the same element within different break points. On resize, Gluten will detach and attach events based on your preferred breakpoints.
 
+### Contributors
+* Brian Vaughn, @morningtoast
+* Brad Walker, @bwalker8038
+
 ## Todo
 * Remove jQuery dependcies
 * More/better docs
