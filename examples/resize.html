@@ -32,6 +32,13 @@
 					alert("Any size");
 				}
 
+			},
+			{
+				sizes: "medium,large",
+				event: function() {
+					console.log("This is not a bind, just a triggered function");
+					console.log("This will fire on medium/large size changes");
+				}
 			}
 
 		]);
